@@ -1,24 +1,48 @@
-import logo from './logo.svg';
+import React, { useEffect, useState } from "react";
+import Weather from './components/Weather/Weather';
+import Svg from './components/Svg/Svg';
 import './App.css';
 
 function App() {
+  const [lat, setLat] = useState([]);
+  const [long, setLong] = useState([]);
+  const [data, setData] = useState([]);
+
+  const exclude = 'hourly, minutely, current, alerts'
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      await navigator.geolocation.getCurrentPosition(function(position) {
+        setLat(position.coords.latitude);
+        setLong(position.coords.longitude);
+      });
+    }
+    fetchData();
+  }, [])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (long !== null && lat !== null) {
+        await fetch(`${process.env.REACT_APP_API_URL}/onecall?lat=${lat}&lon=${long}&exclude=${exclude}&units=metric&appid=${process.env.REACT_APP_API_KEY}`)
+        .then(res => res.json())
+        .then(result => {
+          setData(result.daily)
+        });
+      }
+    };
+    fetchData();  
+  }, [lat, long])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div className="wrapper">
+        {data ? 
+          data.map((d, i) => <Weather weatherData={d} key={i}/>)
+          :
+          null}        
+      </div>
+      <Svg />
+    </>
   );
 }
 
