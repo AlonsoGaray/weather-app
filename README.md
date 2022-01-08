@@ -26,7 +26,7 @@ Made by AlonsoGaray
 
 ## About The Project
 
-[Weather API](https://weather-api-example.netlify.app/)
+
 ![alt text](https://raw.githubusercontent.com/AlonsoGaray/weather-app/main/src/img/Project.png)
 
 This exercise is to keep practicing API and useState usage. The goal that we needed to achieve was to render the weather for the current location where the webpage is loaded. I used the [open weather map api](https://openweathermap.org/).
